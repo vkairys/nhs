@@ -65,9 +65,12 @@
     <Compile Include="Filters\RegionSpendFilter.cs" />
     <Compile Include="IFileStorage.cs" />
     <Compile Include="IFilter.cs" />
+    <Compile Include="INhsProcessor.cs" />
     <Compile Include="Nhs.cs" />
+    <Compile Include="NhsProcessor.cs" />
     <Compile Include="NhsViewModel.cs" />
     <Compile Include="Practice.cs" />
+    <Compile Include="PracticeResult.cs" />
     <Compile Include="Prescription.cs" />
     <Compile Include="PrescriptionCost.cs" />
     <Compile Include="Program.cs" />

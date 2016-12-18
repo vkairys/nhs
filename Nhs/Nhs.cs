@@ -6,24 +6,22 @@ namespace Nhs
     public class Nhs
     {
         private readonly IFileStorage _fileStorage;
+        private readonly INhsProcessor _nhsProcessor;
 
-        public Nhs(IFileStorage fileStorage)
+        public Nhs(IFileStorage fileStorage, INhsProcessor nhsProcessor)
         {
             _fileStorage = fileStorage;
+            _nhsProcessor = nhsProcessor;
         }
 
         public NhsViewModel Execute(string practicePath, string prescriptionPath, string prescriptionCostPath)
         {
             var reader = new DataReader();
 
-            var practiceCountFilter = new PracticeCountFilter(new[]
-            {
-                "E", "EC", "N", "NW", "SE", "SW", "W", "WC" //London postcodes
-            });
-            var practicePostcodesFilter = new PracticePostcodesFilter();
+            PracticeResult practiceResult;
             using (var practices = _fileStorage.ReadData(practicePath))
             {
-                reader.ExecuteFilters(practices, new IFilter<Practice>[] { practiceCountFilter, practicePostcodesFilter });
+               practiceResult = _nhsProcessor.ProcessPractice(practices);
             }
 
             var prescriptionChapterFilter = new PrescriptionChapterFilter();
@@ -34,8 +32,8 @@ namespace Nhs
 
             var drugTypeFilter = new DrugTypeFilter(prescriptionChapterFilter.Prescriptions);
             var prescriptionAverageActFilter = new PrescriptionAverageActFilter("Peppermint Oil");
-            var postcodeSpendFilter = new PostcodeSpendFilter(practicePostcodesFilter.Practices);
-            var regionSpendFilter = new RegionSpendFilter(practicePostcodesFilter.Practices);
+            var postcodeSpendFilter = new PostcodeSpendFilter(practiceResult.Practices);
+            var regionSpendFilter = new RegionSpendFilter(practiceResult.Practices);
             using (var prescriptions = _fileStorage.ReadData(prescriptionPath))
             {
                 reader.ExecuteFilters(prescriptions, new IFilter<Prescription>[] { prescriptionAverageActFilter, postcodeSpendFilter, regionSpendFilter, drugTypeFilter });
@@ -43,7 +41,7 @@ namespace Nhs
 
             var model = new NhsViewModel
             {
-                PracticeCount = practiceCountFilter.Total,
+                PracticeCount = practiceResult.Total,
                 AverageCost = prescriptionAverageActFilter.Cost,
                 DrugTypes = drugTypeFilter.DrugTypes.OrderByDescending(d => d.Count).Take(5),
                 RegionPrescripctions = regionSpendFilter.Regions,

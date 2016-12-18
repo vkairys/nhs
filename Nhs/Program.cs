@@ -58,7 +58,8 @@ namespace Nhs
         {
             container.Register(
                 Component.For<Nhs>(),
-                Component.For<IFileStorage>().ImplementedBy<FileStorage>()
+                Component.For<IFileStorage>().ImplementedBy<FileStorage>(),
+                Component.For<INhsProcessor>().ImplementedBy<NhsProcessor>()
             );
         }
     }
