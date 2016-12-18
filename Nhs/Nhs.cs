@@ -24,13 +24,13 @@ namespace Nhs
                practiceResult = _nhsProcessor.ProcessPractice(practices);
             }
 
-            var prescriptionChapterFilter = new PrescriptionChapterFilter();
+            PrescriptionCostResult prescriptionCostResult;
             using (var prescriptionCosts = _fileStorage.ReadData(prescriptionCostPath))
             {
-                reader.ExecuteFilters(prescriptionCosts, new IFilter<PrescriptionCost>[] { prescriptionChapterFilter });
+                prescriptionCostResult = _nhsProcessor.ProcessPrescriptionCost(prescriptionCosts);
             }
 
-            var drugTypeFilter = new DrugTypeFilter(prescriptionChapterFilter.Prescriptions);
+            var drugTypeFilter = new DrugTypeFilter(prescriptionCostResult.Prescriptions);
             var prescriptionAverageActFilter = new PrescriptionAverageActFilter("Peppermint Oil");
             var postcodeSpendFilter = new PostcodeSpendFilter(practiceResult.Practices);
             var regionSpendFilter = new RegionSpendFilter(practiceResult.Practices);
