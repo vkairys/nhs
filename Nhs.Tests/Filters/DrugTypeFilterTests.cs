@@ -11,18 +11,18 @@ namespace Nhs.Tests.Filters
         [Test]
         public void FilterDrugType()
         {
-            var prescripctionsTypes = new Dictionary<string, byte>
+            var prescriptionsTypes = new Dictionary<string, byte>
             {
                 {"Peppermint Oil", 0}
             };
 
-            var prescripction = new Prescription
+            var prescription = new Prescription
             {
                 BNFName = "Peppermint Oil"
             };
 
-            var dtf = new DrugTypeFilter(prescripctionsTypes);
-            dtf.Execute(prescripction);
+            var dtf = new DrugTypeFilter(prescriptionsTypes);
+            dtf.Execute(prescription);
 
             Assert.AreEqual(1, dtf.DrugTypes.First().Count);
         }
