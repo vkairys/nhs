@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.SubSystems.Configuration;
+using Castle.Windsor;
 
 namespace Nhs
 {
@@ -11,8 +14,11 @@ namespace Nhs
 
         static void Main()
         {
-            var viewModel = new Nhs().Execute(PracticePath, PrescriptionPath, PrescriptionCostPath);
+            var container = new WindsorContainer();
+            container.Install(new ServicesInstaller());
 
+            var nhs = container.Resolve<Nhs>();
+            var viewModel = nhs.Execute(PracticePath, PrescriptionPath, PrescriptionCostPath);
 
             var nfi = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
             nfi.CurrencySymbol = "";
@@ -43,6 +49,16 @@ namespace Nhs
             }
 
             Console.ReadLine();
+        }
+    }
+
+    class ServicesInstaller: IWindsorInstaller
+    {
+        public void Install(IWindsorContainer container, IConfigurationStore store)
+        {
+            container.Register(
+                Component.For<Nhs>()
+            );
         }
     }
 }
