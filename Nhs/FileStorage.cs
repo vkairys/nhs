@@ -4,7 +4,7 @@ namespace Nhs
 {
     public class FileStorage : IFileStorage
     {
-        public StreamReader ReadData(string path)
+        public TextReader ReadData(string path)
         {
             return File.OpenText(path);
         }

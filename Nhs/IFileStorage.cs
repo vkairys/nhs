@@ -4,6 +4,6 @@ namespace Nhs
 {
     public interface IFileStorage
     {
-        StreamReader ReadData(string path);
+        TextReader ReadData(string path);
     }
 }

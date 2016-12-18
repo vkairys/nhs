@@ -5,9 +5,9 @@ namespace Nhs
 {
     public interface INhsProcessor
     {
-        PracticeResult ProcessPractice(StreamReader streamReader);
-        PrescriptionCostResult ProcessPrescriptionCost(StreamReader streamReader);
-        PrescriptionResult ProcessPrescription(StreamReader streamReader, Dictionary<string, string> prescriptionPostCodes,
+        PracticeResult ProcessPractice(TextReader textReader);
+        PrescriptionCostResult ProcessPrescriptionCost(TextReader textReader);
+        PrescriptionResult ProcessPrescription(TextReader textReader, Dictionary<string, string> prescriptionPostCodes,
             Dictionary<string, byte> prescriptionsTypes);
     }
 }

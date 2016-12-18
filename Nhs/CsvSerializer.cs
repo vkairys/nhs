@@ -7,7 +7,7 @@ namespace Nhs
 {
     public class CsvSerializer : ICsvSerializer
     {
-        public IEnumerable<Practice> DeserializePractices(StreamReader streamReader)
+        public IEnumerable<Practice> DeserializePractices(TextReader streamReader)
         {
             var configurations = new CsvConfiguration
             {
@@ -18,7 +18,7 @@ namespace Nhs
             return ReadRecords<Practice>(streamReader, configurations);
         }
 
-        public IEnumerable<Prescription> DeserializePrescriptions(StreamReader streamReader)
+        public IEnumerable<Prescription> DeserializePrescriptions(TextReader textReader)
         {
             var configurations = new CsvConfiguration
             {
@@ -27,20 +27,20 @@ namespace Nhs
                 TrimFields = true
             };
 
-            return ReadRecords<Prescription>(streamReader, configurations);
+            return ReadRecords<Prescription>(textReader, configurations);
         }
 
-        public IEnumerable<PrescriptionCost> DeserializePrescriptionCosts(StreamReader streamReader)
+        public IEnumerable<PrescriptionCost> DeserializePrescriptionCosts(TextReader textReader)
         {
             var configurations = new CsvConfiguration();
             configurations.RegisterClassMap<PrescriptionCostClassMap>();
 
-            return ReadRecords<PrescriptionCost>(streamReader, configurations);
+            return ReadRecords<PrescriptionCost>(textReader, configurations);
         }
 
-        private IEnumerable<T> ReadRecords<T>(StreamReader streamReader, CsvConfiguration configuration)
+        private IEnumerable<T> ReadRecords<T>(TextReader textReader, CsvConfiguration configuration)
         {
-            using (var reader = new CsvReader(streamReader, configuration))
+            using (var reader = new CsvReader(textReader, configuration))
             {
                 while (reader.Read())
                 {

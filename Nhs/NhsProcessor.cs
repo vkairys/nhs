@@ -13,7 +13,7 @@ namespace Nhs
             _csvSerializer = csvSerializer;
         }
 
-        public PracticeResult ProcessPractice(StreamReader streamReader)
+        public PracticeResult ProcessPractice(TextReader textReader)
         {
             var practiceCountFilter = new PracticeCountFilter(new[]
             {
@@ -22,7 +22,7 @@ namespace Nhs
 
             var practicePostcodesFilter = new PracticePostcodesFilter();
 
-            var pratices = _csvSerializer.DeserializePractices(streamReader);
+            var pratices = _csvSerializer.DeserializePractices(textReader);
 
             Filter(pratices, practiceCountFilter, practicePostcodesFilter);
 
@@ -33,11 +33,11 @@ namespace Nhs
             };
         }
 
-        public PrescriptionCostResult ProcessPrescriptionCost(StreamReader streamReader)
+        public PrescriptionCostResult ProcessPrescriptionCost(TextReader textReader)
         {
             var prescriptionChapterFilter = new PrescriptionChapterFilter();
 
-            var prescriptionCosts = _csvSerializer.DeserializePrescriptionCosts(streamReader);
+            var prescriptionCosts = _csvSerializer.DeserializePrescriptionCosts(textReader);
 
             Filter(prescriptionCosts, prescriptionChapterFilter);
 
@@ -47,7 +47,7 @@ namespace Nhs
             };
         }
 
-        public PrescriptionResult ProcessPrescription(StreamReader streamReader, Dictionary<string, string> prescriptionPostCodes,
+        public PrescriptionResult ProcessPrescription(TextReader textReader, Dictionary<string, string> prescriptionPostCodes,
             Dictionary<string, byte> prescriptionsTypes)
         {
             var drugTypeFilter = new DrugTypeFilter(prescriptionsTypes);
@@ -55,7 +55,7 @@ namespace Nhs
             var postcodeSpendFilter = new PostcodeSpendFilter(prescriptionPostCodes);
             var regionSpendFilter = new RegionSpendFilter(prescriptionPostCodes);
 
-            var prescriptions = _csvSerializer.DeserializePrescriptions(streamReader);
+            var prescriptions = _csvSerializer.DeserializePrescriptions(textReader);
 
             Filter(prescriptions, drugTypeFilter, prescriptionAverageActFilter, postcodeSpendFilter, regionSpendFilter);
 
