@@ -57,7 +57,8 @@ namespace Nhs
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
-                Component.For<Nhs>()
+                Component.For<Nhs>(),
+                Component.For<IFileStorage>().ImplementedBy<FileStorage>()
             );
         }
     }

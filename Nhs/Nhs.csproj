@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataReader.cs" />
+    <Compile Include="FileStorage.cs" />
     <Compile Include="Filters\DrugTypeFilter.cs" />
     <Compile Include="Filters\PostcodeSpendFilter.cs" />
     <Compile Include="Filters\PracticeCountFilter.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Filters\PrescriptionAverageActFilter.cs" />
     <Compile Include="Filters\PrescriptionChapterFilter.cs" />
     <Compile Include="Filters\RegionSpendFilter.cs" />
+    <Compile Include="IFileStorage.cs" />
     <Compile Include="IFilter.cs" />
     <Compile Include="Nhs.cs" />
     <Compile Include="NhsViewModel.cs" />
