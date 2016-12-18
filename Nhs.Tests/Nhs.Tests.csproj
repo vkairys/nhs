@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CsvSerializerTests.cs" />
     <Compile Include="Filters\DrugTypeFilterTests.cs" />
     <Compile Include="Filters\PostcodeSpendFilterTests.cs" />
     <Compile Include="Filters\PracticeCountFilterTests.cs" />
