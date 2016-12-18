@@ -22,7 +22,7 @@ namespace Nhs
 
             var nfi = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
             nfi.CurrencySymbol = "";
-            Console.WriteLine("Number of practises in London: {0}", viewModel.PracticeCount);
+            Console.WriteLine($"Number of practices in London: {viewModel.PracticeCount}");
 
             Console.WriteLine("---------------------------------------------------------------");
             Console.WriteLine("Average actual cost of all peppermint oil prescriptions: {0:C}", viewModel.AverageCost);
@@ -59,7 +59,8 @@ namespace Nhs
             container.Register(
                 Component.For<Nhs>(),
                 Component.For<IFileStorage>().ImplementedBy<FileStorage>(),
-                Component.For<INhsProcessor>().ImplementedBy<NhsProcessor>()
+                Component.For<INhsProcessor>().ImplementedBy<NhsProcessor>(), 
+                Component.For<ICsvSerializer>().ImplementedBy<CsvSerializer>()
             );
         }
     }

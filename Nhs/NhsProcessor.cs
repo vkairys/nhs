@@ -6,7 +6,12 @@ namespace Nhs
 {
     public class NhsProcessor : INhsProcessor
     {
-        private readonly DataReader _dataReader = new DataReader();
+        private readonly ICsvSerializer _csvSerializer;
+
+        public NhsProcessor(ICsvSerializer csvSerializer)
+        {
+            _csvSerializer = csvSerializer;
+        }
 
         public PracticeResult ProcessPractice(StreamReader streamReader)
         {
@@ -17,7 +22,10 @@ namespace Nhs
 
             var practicePostcodesFilter = new PracticePostcodesFilter();
 
-            _dataReader.ExecuteFilters(streamReader, new IFilter<Practice>[] { practiceCountFilter, practicePostcodesFilter });
+            var pratices = _csvSerializer.DeserializePractices(streamReader);
+
+            Filter(pratices, practiceCountFilter, practicePostcodesFilter);
+
             return new PracticeResult
             {
                 Practices = practicePostcodesFilter.Practices,
@@ -29,7 +37,9 @@ namespace Nhs
         {
             var prescriptionChapterFilter = new PrescriptionChapterFilter();
 
-            _dataReader.ExecuteFilters(streamReader, new IFilter<PrescriptionCost>[] { prescriptionChapterFilter });
+            var prescriptionCosts = _csvSerializer.DeserializePrescriptionCosts(streamReader);
+
+            Filter(prescriptionCosts, prescriptionChapterFilter);
 
             return new PrescriptionCostResult
             {
@@ -45,8 +55,9 @@ namespace Nhs
             var postcodeSpendFilter = new PostcodeSpendFilter(prescriptionPostCodes);
             var regionSpendFilter = new RegionSpendFilter(prescriptionPostCodes);
 
-            _dataReader.ExecuteFilters(streamReader, new IFilter<Prescription>[] { prescriptionAverageActFilter, postcodeSpendFilter, regionSpendFilter, drugTypeFilter });
-            
+            var prescriptions = _csvSerializer.DeserializePrescriptions(streamReader);
+
+            Filter(prescriptions, drugTypeFilter, prescriptionAverageActFilter, postcodeSpendFilter, regionSpendFilter);
 
             return new PrescriptionResult
             {
@@ -55,6 +66,17 @@ namespace Nhs
                 PostCodes = postcodeSpendFilter.PostCodes,
                 Regions = regionSpendFilter.Regions
             };
+        }
+
+        private void Filter<T>(IEnumerable<T> entities, params IFilter<T>[] filters)
+        {
+            foreach (var entity in entities)
+            {
+                foreach (var filter in filters)
+                {
+                    filter.Execute(entity);
+                }
+            }
         }
     }
 }

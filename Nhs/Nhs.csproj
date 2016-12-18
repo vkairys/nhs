@@ -55,7 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CsvSerializer.cs" />
-    <Compile Include="DataReader.cs" />
     <Compile Include="FileStorage.cs" />
     <Compile Include="Filters\DrugTypeFilter.cs" />
     <Compile Include="Filters\PostcodeSpendFilter.cs" />
