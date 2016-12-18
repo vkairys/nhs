@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Nhs.Filters;
 
 namespace Nhs
@@ -33,6 +34,26 @@ namespace Nhs
             return new PrescriptionCostResult
             {
                 Prescriptions = prescriptionChapterFilter.Prescriptions
+            };
+        }
+
+        public PrescriptionResult ProcessPrescription(StreamReader streamReader, Dictionary<string, string> prescriptionPostCodes,
+            Dictionary<string, byte> prescriptionsTypes)
+        {
+            var drugTypeFilter = new DrugTypeFilter(prescriptionsTypes);
+            var prescriptionAverageActFilter = new PrescriptionAverageActFilter("Peppermint Oil");
+            var postcodeSpendFilter = new PostcodeSpendFilter(prescriptionPostCodes);
+            var regionSpendFilter = new RegionSpendFilter(prescriptionPostCodes);
+
+            _dataReader.ExecuteFilters(streamReader, new IFilter<Prescription>[] { prescriptionAverageActFilter, postcodeSpendFilter, regionSpendFilter, drugTypeFilter });
+            
+
+            return new PrescriptionResult
+            {
+                Cost = prescriptionAverageActFilter.Cost,
+                DrugTypes = drugTypeFilter.DrugTypes,
+                PostCodes = postcodeSpendFilter.PostCodes,
+                Regions = regionSpendFilter.Regions
             };
         }
     }

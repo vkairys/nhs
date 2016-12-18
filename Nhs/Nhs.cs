@@ -16,12 +16,10 @@ namespace Nhs
 
         public NhsViewModel Execute(string practicePath, string prescriptionPath, string prescriptionCostPath)
         {
-            var reader = new DataReader();
-
             PracticeResult practiceResult;
             using (var practices = _fileStorage.ReadData(practicePath))
             {
-               practiceResult = _nhsProcessor.ProcessPractice(practices);
+                practiceResult = _nhsProcessor.ProcessPractice(practices);
             }
 
             PrescriptionCostResult prescriptionCostResult;
@@ -30,22 +28,20 @@ namespace Nhs
                 prescriptionCostResult = _nhsProcessor.ProcessPrescriptionCost(prescriptionCosts);
             }
 
-            var drugTypeFilter = new DrugTypeFilter(prescriptionCostResult.Prescriptions);
-            var prescriptionAverageActFilter = new PrescriptionAverageActFilter("Peppermint Oil");
-            var postcodeSpendFilter = new PostcodeSpendFilter(practiceResult.Practices);
-            var regionSpendFilter = new RegionSpendFilter(practiceResult.Practices);
+            PrescriptionResult prescriptionResult;
             using (var prescriptions = _fileStorage.ReadData(prescriptionPath))
             {
-                reader.ExecuteFilters(prescriptions, new IFilter<Prescription>[] { prescriptionAverageActFilter, postcodeSpendFilter, regionSpendFilter, drugTypeFilter });
+                prescriptionResult = _nhsProcessor.ProcessPrescription(prescriptions, practiceResult.Practices,
+                    prescriptionCostResult.Prescriptions);
             }
 
             var model = new NhsViewModel
             {
                 PracticeCount = practiceResult.Total,
-                AverageCost = prescriptionAverageActFilter.Cost,
-                DrugTypes = drugTypeFilter.DrugTypes.OrderByDescending(d => d.Count).Take(5),
-                RegionPrescripctions = regionSpendFilter.Regions,
-                PostCodeSpents = postcodeSpendFilter.PostCodes.OrderByDescending(p => p.Spent).Take(5)
+                AverageCost = prescriptionResult.Cost,
+                DrugTypes = prescriptionResult.DrugTypes.OrderByDescending(d => d.Count).Take(5),
+                RegionPrescripctions = prescriptionResult.Regions,
+                PostCodeSpents = prescriptionResult.PostCodes.OrderByDescending(p => p.Spent).Take(5)
             };
 
             return model;

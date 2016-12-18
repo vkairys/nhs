@@ -74,6 +74,7 @@
     <Compile Include="Prescription.cs" />
     <Compile Include="PrescriptionCost.cs" />
     <Compile Include="PrescriptionCostResult.cs" />
+    <Compile Include="PrescriptionResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
